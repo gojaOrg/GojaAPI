@@ -3,7 +3,9 @@ const config = require("config");
 
 module.exports = async function (req, res, next) {
   try {
-    let token = req.cookies["x-auth-token"];
+    var token = req.get("authorization");
+    token = token.split(" ")[1];
+    console.log(token);
     if (token) {
       const decode = jwt.verify(token, process.env.MY_KEY);
       req.user = decode;

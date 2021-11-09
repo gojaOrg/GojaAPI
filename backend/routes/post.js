@@ -9,17 +9,16 @@ const upload = require("../middleware/imageUpload");
 const ObjectId = mongoose.Types.ObjectId;
 var axios = require("axios");
 
-router.get(
-  "/",
-  /*auth,*/ async (req, res) => {
-    axios({
-      method: "get",
-      url: process.env.POSTS_SERVICE_URL + "/posts",
-    }).then(function (response) {
-      res.json(response.data);
-    });
-  }
-);
+router.get("/", auth, async (req, res) => {
+  var userId = req.user._id;
+  console.log(userId);
+  axios({
+    method: "get",
+    url: process.env.POSTS_SERVICE_URL + "/posts/" + userId,
+  }).then(function (response) {
+    res.json(response.data);
+  });
+});
 
 router.get("/:id", auth, async (req, res) => {
   var id = req.params.id;
@@ -55,23 +54,20 @@ router.post(
   }
 );
 router.post("/", auth, async (req, res, next) => {
-  console.log(req.body);
-  const form = req.body;
+  var form = req.body;
   console.log(req.user._id);
+  form.user.id = req.user._id;
+  console.log(form);
 
   try {
-    const post = new Post({
-      text: form.text,
-      audio: form.audioUrl,
-      inReplyToID: form.replyPostId,
-      inReplpyToUser: form.replyUserId,
-      "user.id": form.user.id,
-      "user.friendsCount": form.user.friendsCount,
-      "user.profilePicture": form.user.profilePicture,
-      "user.following": form.user.following,
-    });
-    await post.save();
-    res.status(200).json(post);
+    axios
+      .post(process.env.POSTS_SERVICE_URL + "/posts", form)
+      .then(function (response) {
+        res.json(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     console.log("Post posted to database");
   } catch (err) {
     console.error(err.message);

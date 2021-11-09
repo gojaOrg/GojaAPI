@@ -12,12 +12,9 @@ const auth = require("../middleware/auth");
 router.post(
   "/",
   /*auth,*/ async (req, res) => {
+    var form = req.body;
     axios
-      .post(process.env.USERS_SERVICE_URL + "/users", {
-        userName: "erkanerk",
-        email: "erkannn@erk.com",
-        password: "123",
-      })
+      .post(process.env.USERS_SERVICE_URL + "/users/signup", form)
       .then(function (response) {
         res.json(response.data);
       })
