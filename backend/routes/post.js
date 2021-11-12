@@ -5,9 +5,11 @@ const User = require("../models/user");
 const auth = require("../middleware/auth");
 const Post = require("../models/postModel");
 const mongoose = require("mongoose");
-const upload = require("../middleware/imageUpload");
 const ObjectId = mongoose.Types.ObjectId;
 var axios = require("axios");
+const multer = require("multer");
+const upload = multer();
+var FormData = require("form-data");
 
 router.get("/", auth, async (req, res) => {
   var userId = req.user._id;
@@ -44,15 +46,27 @@ router.post(
     res.json(fileLocations);
   }
 );
-router.post(
-  "/add-audio",
-  upload.single("audio"),
-  auth,
-  async function (req, res) {
-    var id = req.user._id;
-    res.json(req.file.location);
-  }
-);
+router.post("/add-audio", auth, upload.any(), async function (req, res) {
+  const { headers, files } = req;
+  const { buffer, originalname: filename } = files[0];
+  console.log(filename);
+
+  let formData = new FormData();
+  formData.append("file", buffer, { filename });
+
+  const config = { header: { "Content-Type": "multipart/form-data" } };
+  axios
+    .post(process.env.POSTS_SERVICE_URL + "/posts/add-audio", formData, {
+      headers: formData.getHeaders(),
+    })
+    .then((response) => {
+      // Handle result…
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+});
 router.post("/", auth, async (req, res, next) => {
   var form = req.body;
   console.log(req.user._id);
