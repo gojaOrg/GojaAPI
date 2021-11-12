@@ -46,7 +46,7 @@ router.post(
     res.json(fileLocations);
   }
 );
-router.post("/add-audio", auth, upload.any(), async function (req, res) {
+router.post("/upload-audio", auth, upload.any(), async function (req, res) {
   const { headers, files } = req;
   const { buffer, originalname: filename } = files[0];
   console.log(filename);
@@ -56,7 +56,7 @@ router.post("/add-audio", auth, upload.any(), async function (req, res) {
 
   const config = { header: { "Content-Type": "multipart/form-data" } };
   axios
-    .post(process.env.POSTS_SERVICE_URL + "/posts/add-audio", formData, {
+    .post(process.env.POSTS_SERVICE_URL + "/posts/upload-audio", formData, {
       headers: formData.getHeaders(),
     })
     .then((response) => {
