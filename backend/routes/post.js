@@ -74,4 +74,36 @@ router.post("/", auth, async (req, res, next) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.post("/like", async (req, res) => {
+  console.log("POSTING LIKES");
+  const body = req.body;
+  const likeOrUnlike = body.likeType;
+  let likePath;
+  let likeBody = {
+    id: body.postId,
+    user: { userId: body.user.id, userName: body.user.userName },
+  };
+  if (likeOrUnlike) {
+    likePath = "/like";
+  } else {
+    likePath = "/unlike";
+  }
+  console.log(likeBody);
+  try {
+    console.log("TRYING TO POST");
+    axios
+      .post("http://localhost:3002/posts" + likePath, likeBody)
+      .then((response) => {
+        res.json(response.data);
+        console.log("Liking updated on post");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 module.exports = router;
