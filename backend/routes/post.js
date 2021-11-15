@@ -60,7 +60,7 @@ router.post("/upload-audio", auth, upload.any(), async function (req, res) {
       headers: formData.getHeaders(),
     })
     .then((response) => {
-      // Handle result…
+      // Respond with AWS S3 URL
       res.json(response.data);
     })
     .catch(function (error) {
