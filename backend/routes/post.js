@@ -5,9 +5,11 @@ const User = require("../models/user");
 const auth = require("../middleware/auth");
 const Post = require("../models/postModel");
 const mongoose = require("mongoose");
-const upload = require("../middleware/imageUpload");
 const ObjectId = mongoose.Types.ObjectId;
 var axios = require("axios");
+const multer = require("multer");
+const upload = multer();
+var FormData = require("form-data");
 
 router.get("/", auth, async (req, res) => {
   var userId = req.user._id;
