@@ -10,7 +10,7 @@ const upload = require("../middleware/imageUpload");
 const auth = require("../middleware/auth");
 
 router.post(
-  "/",
+  "/signup",
   /*auth,*/ async (req, res) => {
     var form = req.body;
     axios
