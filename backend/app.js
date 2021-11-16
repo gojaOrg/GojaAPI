@@ -19,7 +19,6 @@ if (!config.get("myprivatekey")) {
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 // Connects to database
-var db = require("./mongoose");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
