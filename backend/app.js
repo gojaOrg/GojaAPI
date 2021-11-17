@@ -18,8 +18,6 @@ if (!config.get("myprivatekey")) {
 // Adds environment variables, only in development
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
-// Connects to database
-
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var postRouter = require("./routes/post");
