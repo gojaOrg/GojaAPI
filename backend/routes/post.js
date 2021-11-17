@@ -76,8 +76,7 @@ router.post("/", auth, async (req, res, next) => {
 });
 
 router.post("/like", auth, async (req, res) => {
-  console.log("POSTING LIKES");
-  var id = req.user_id;
+  const id = req.user._id;
   const body = req.body;
   const likeOrUnlike = body.likeType;
   let likePath;
@@ -85,19 +84,17 @@ router.post("/like", auth, async (req, res) => {
     id: body.postId,
     user: { userId: id, userName: body.user.userName },
   };
-  if (likeOrUnlike) {
-    likePath = "/like";
-  } else {
-    likePath = "/unlike";
-  }
   console.log(likeBody);
+  if (likeOrUnlike) {
+    likePath = "/posts/like";
+  } else {
+    likePath = "/posts/unlike";
+  }
   try {
-    console.log("TRYING TO POST");
     axios
-      .post("http://localhost:3002/posts" + likePath, likeBody)
+      .post(process.env.POSTS_SERVICE_URL + likePath, likeBody)
       .then((response) => {
         res.json(response.data);
-        console.log("Liking updated on post");
       })
       .catch((error) => {
         console.log(error);
