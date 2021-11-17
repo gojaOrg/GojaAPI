@@ -31,4 +31,70 @@ router.post("/login", async (req, res) => {
     });
 });
 
+router.post(
+  "/follow",
+  [
+    body("userToFollow", "Invalid input").trim().escape().isLength({
+      min: 1,
+    }),
+  ],
+  auth,
+  async (req, res) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/errors messages.
+      // Error messages can be returned in an array using `errors.array()`.
+      console.log("Found validation errors");
+      return res.status(422).json({
+        errors: errors.array(),
+      });
+    } else {
+      var form = req.body;
+      form.userId = req.user._id;
+      axios
+        .post(process.env.USERS_SERVICE_URL + "/users/follow", form)
+        .then(function (response) {
+          res.json(response.data);
+        })
+        .catch(function (error) {
+          res.status(error.response.status).json(error.response.data);
+        });
+    }
+  }
+);
+
+router.post(
+  "/unfollow",
+  [
+    body("userToUnfollow", "Invalid input").trim().escape().isLength({
+      min: 1,
+    }),
+  ],
+  auth,
+  async (req, res) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/errors messages.
+      // Error messages can be returned in an array using `errors.array()`.
+      console.log("Found validation errors");
+      return res.status(422).json({
+        errors: errors.array(),
+      });
+    } else {
+      var form = req.body;
+      form.userId = req.user._id;
+      axios
+        .post(process.env.USERS_SERVICE_URL + "/users/unfollow", form)
+        .then(function (response) {
+          res.json(response.data);
+        })
+        .catch(function (error) {
+          res.status(error.response.status).json(error.response.data);
+        });
+    }
+  }
+);
+
 module.exports = router;
