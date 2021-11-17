@@ -17,9 +17,13 @@ router.get("/my-posts", auth, async (req, res) => {
   axios({
     method: "get",
     url: process.env.POSTS_SERVICE_URL + "/posts/my-posts/" + userId,
-  }).then(function (response) {
-    res.json(response.data);
-  });
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
 });
 
 router.get("/all", auth, async (req, res) => {
@@ -28,9 +32,13 @@ router.get("/all", auth, async (req, res) => {
   axios({
     method: "get",
     url: process.env.POSTS_SERVICE_URL + "/posts/all",
-  }).then(function (response) {
-    res.json(response.data);
-  });
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
 });
 
 router.get("/:id", auth, async (req, res) => {
@@ -75,7 +83,7 @@ router.post("/upload-audio", auth, upload.any(), async function (req, res) {
       res.json(response.data);
     })
     .catch(function (error) {
-      console.log(error);
+      res.status(error.response.status).json(error.response.data);
     });
 });
 router.post("/", auth, async (req, res, next) => {
@@ -91,7 +99,7 @@ router.post("/", auth, async (req, res, next) => {
         res.json(response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        res.status(error.response.status).json(error.response.data);
       });
     console.log("Post posted to database");
   } catch (err) {
