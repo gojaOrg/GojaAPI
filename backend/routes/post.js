@@ -97,7 +97,10 @@ router.post("/like", auth, async (req, res) => {
         res.json(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.status);
+        res
+          .status(error.response.status)
+          .json({ message: error.response.data });
       });
   } catch (err) {
     console.error(err.message);
