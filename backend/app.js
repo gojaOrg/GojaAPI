@@ -31,9 +31,7 @@ var app = express();
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   const url =
-    process.env.NODE_ENV === "production"
-      ? "https://www.gojacompany.com"
-      : "http://localhost:8080";
+    process.env.NODE_ENV === "production" ? "https://www.gojacompany.com" : "*";
   res.setHeader("Access-Control-Allow-Origin", url);
 
   // Request methods you wish to allow
