@@ -75,14 +75,15 @@ router.post("/", auth, async (req, res, next) => {
   }
 });
 
-router.post("/like", async (req, res) => {
+router.post("/like", auth, async (req, res) => {
   console.log("POSTING LIKES");
+  var id = req.user_id;
   const body = req.body;
   const likeOrUnlike = body.likeType;
   let likePath;
   let likeBody = {
     id: body.postId,
-    user: { userId: body.user.id, userName: body.user.userName },
+    user: { userId: id, userName: body.user.userName },
   };
   if (likeOrUnlike) {
     likePath = "/like";
