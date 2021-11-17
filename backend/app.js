@@ -1,5 +1,6 @@
 var createError = require("http-errors");
 var express = require("express");
+var cors = require('cors');
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
@@ -25,6 +26,7 @@ var postRouter = require("./routes/post");
 var cookieParser = require("cookie-parser");
 
 var app = express();
+app.use(cors());
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
