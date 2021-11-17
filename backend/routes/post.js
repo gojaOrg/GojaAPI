@@ -11,12 +11,23 @@ const multer = require("multer");
 const upload = multer();
 var FormData = require("form-data");
 
-router.get("/", auth, async (req, res) => {
+router.get("/my-posts", auth, async (req, res) => {
   var userId = req.user._id;
   console.log(userId);
   axios({
     method: "get",
-    url: process.env.POSTS_SERVICE_URL + "/posts/" + userId,
+    url: process.env.POSTS_SERVICE_URL + "/posts/my-posts/" + userId,
+  }).then(function (response) {
+    res.json(response.data);
+  });
+});
+
+router.get("/all", auth, async (req, res) => {
+  var userId = req.user._id;
+  console.log(userId);
+  axios({
+    method: "get",
+    url: process.env.POSTS_SERVICE_URL + "/posts/all",
   }).then(function (response) {
     res.json(response.data);
   });
