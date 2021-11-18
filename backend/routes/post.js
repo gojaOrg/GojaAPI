@@ -41,16 +41,32 @@ router.get("/all", auth, async (req, res) => {
     });
 });
 
-router.get("/:id", auth, async (req, res) => {
-  var id = req.params.id;
-  var jobs = await Products.find(
-    { user: id },
-    {
-      desc: 1,
-      photos: 1,
-    }
-  );
-  res.json(jobs);
+router.get("/more/:minDate", auth, async (req, res) => {
+  var userId = req.user._id;
+  console.log(userId);
+  axios({
+    method: "get",
+    url: process.env.POSTS_SERVICE_URL + "/posts/more/" + req.params.minDate,
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
+router.get("/replies/:id", auth, async (req, res) => {
+  axios({
+    method: "get",
+    url: process.env.POSTS_SERVICE_URL + "/posts/replies/" + req.params.id,
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
 });
 
 router.post(
