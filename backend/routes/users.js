@@ -121,7 +121,6 @@ router.post(
 );
 
 router.get("/search", auth, async (req, res) => {
-  console.log(req.query.search);
   const searchString = req.query.search;
   axios
     .get(process.env.USERS_SERVICE_URL + "/users/search", {
