@@ -102,9 +102,7 @@ router.post("/upload-audio", auth, upload.any(), async function (req, res) {
 });
 router.post("/", auth, async (req, res, next) => {
   var form = req.body;
-  console.log(req.user._id);
   form.user.id = req.user._id;
-  console.log(form);
 
   try {
     axios

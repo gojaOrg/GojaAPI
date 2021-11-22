@@ -119,4 +119,18 @@ router.post(
   }
 );
 
+router.get("/search", auth, async (req, res) => {
+  const searchString = req.query.search;
+  axios
+    .get(process.env.USERS_SERVICE_URL + "/users/search", {
+      params: { search: searchString },
+    })
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch((error) => {
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
 module.exports = router;
