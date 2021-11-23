@@ -10,7 +10,22 @@ const multer = require("multer");
 const upload = multer();
 var FormData = require("form-data");
 
+router.get("/my-profile", auth, async (req, res) => {
+  var userId = req.user._id;
+  axios({
+    method: "get",
+    url: process.env.USERS_SERVICE_URL + "/users/my-profile/" + userId,
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
 router.post("/upload-image", auth, upload.any(), async function (req, res) {
+  console.log(req);
   const { headers, files } = req;
   const { buffer, originalname: filename } = files[0];
 
