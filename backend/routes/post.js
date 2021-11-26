@@ -9,9 +9,13 @@ const multer = require("multer");
 const upload = multer();
 var FormData = require("form-data");
 
-router.get("/my-posts", auth, async (req, res) => {
-  var userId = req.user._id;
-  console.log(userId);
+router.get("/by-user/:id", auth, async (req, res) => {
+  var userId;
+  if (req.params.id == "me") {
+    userId = req.user._id;
+  } else {
+    userId = req.params.id;
+  }
   axios({
     method: "get",
     url: process.env.POSTS_SERVICE_URL + "/posts/my-posts/" + userId,

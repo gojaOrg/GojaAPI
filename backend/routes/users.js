@@ -10,11 +10,54 @@ const multer = require("multer");
 const upload = multer();
 var FormData = require("form-data");
 
-router.get("/my-profile", auth, async (req, res) => {
-  var userId = req.user._id;
+router.get("/profile/:id", auth, async (req, res) => {
+  var userId;
+  if (req.params.id == "me") {
+    userId = req.user._id;
+  } else {
+    userId = req.params.id;
+  }
   axios({
     method: "get",
-    url: process.env.USERS_SERVICE_URL + "/users/my-profile/" + userId,
+    url: process.env.USERS_SERVICE_URL + "/users/profile/" + userId,
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
+router.get("/followers/:id", auth, async (req, res) => {
+  var userId;
+  if (req.params.id == "me") {
+    userId = req.user._id;
+  } else {
+    userId = req.params.id;
+  }
+  axios({
+    method: "get",
+    url: process.env.USERS_SERVICE_URL + "/users/followers/" + userId,
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
+router.get("/following/:id", auth, async (req, res) => {
+  var userId;
+  if (req.params.id == "me") {
+    userId = req.user._id;
+  } else {
+    userId = req.params.id;
+  }
+  axios({
+    method: "get",
+    url: process.env.USERS_SERVICE_URL + "/users/following/" + userId,
   })
     .then(function (response) {
       res.json(response.data);
