@@ -114,7 +114,7 @@ router.post("/login", async (req, res) => {
 router.post(
   "/add-profile-picture",
   [
-    body("url", "Invalid input").trim().escape().isLength({
+    body("url", "Invalid input").trim().isLength({
       min: 1,
     }),
   ],
