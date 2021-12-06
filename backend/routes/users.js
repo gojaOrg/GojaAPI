@@ -9,6 +9,7 @@ const auth = require("../middleware/auth");
 const multer = require("multer");
 const upload = multer();
 var FormData = require("form-data");
+const { createSearchObj } = require("../utils/createSearchUserObj");
 
 router.get("/profile/:id", auth, async (req, res) => {
   var userId;
@@ -247,15 +248,22 @@ router.post(
 );
 
 router.get("/search", auth, async (req, res) => {
+  const userId = req.user._id;
+  const isFollowingList = await axios({
+    method: "get",
+    url: process.env.USERS_SERVICE_URL + "/users/following/" + userId,
+  });
   const searchString = req.query.search;
   axios
     .get(process.env.USERS_SERVICE_URL + "/users/search", {
       params: { search: searchString },
     })
     .then((response) => {
-      res.json(response.data);
+      const ob = createSearchObj(isFollowingList.data, response.data);
+      res.json(ob);
     })
     .catch((error) => {
+      console.log(error);
       res.status(error.response.status).json(error.response.data);
     });
 });
