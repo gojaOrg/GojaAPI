@@ -151,7 +151,7 @@ router.post(
 router.post(
   "/add-profile-audio",
   [
-    body("url", "Invalid input").trim().escape().isLength({
+    body("url", "Invalid input").trim().isLength({
       min: 1,
     }),
   ],
