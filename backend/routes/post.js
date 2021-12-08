@@ -149,17 +149,28 @@ router.post("/upload-audio", auth, upload.any(), async function (req, res) {
 router.post("/", auth, async (req, res, next) => {
   var form = req.body;
   form.user.id = req.user._id;
-
   try {
-    axios
+    var response = await axios
       .post(process.env.POSTS_SERVICE_URL + "/posts", form)
-      .then(function (response) {
-        res.json(response.data);
-      })
       .catch(function (error) {
         res.status(error.response.status).json(error.response.data);
       });
-    console.log("Post posted to database");
+    if (response.status == 200) {
+      axios
+        .post(
+          process.env.USERS_SERVICE_URL + "/users/update-profile-count",
+          form.user
+        )
+        .then(function (response) {
+          res.json(response.data);
+        })
+        .catch(function (error) {
+          res.status(error.response.status).json(error.response.data);
+        });
+      console.log("Post posted to database");
+    } else {
+      res.send("Something went wrong");
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server error" });
