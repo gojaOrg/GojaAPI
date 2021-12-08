@@ -53,6 +53,7 @@ router.get("/my-feed", auth, async (req, res) => {
   });
   let data = {
     following: response.data,
+    userId: userId,
   };
   axios({
     method: "post",
@@ -73,7 +74,6 @@ router.get("/my-feed", auth, async (req, res) => {
 router.get("/my-feed/more/:minDate", auth, async (req, res) => {
   var userId = req.user._id;
   req.body.minDate = req.params.minDate;
-  console.log(userId);
   var response = await axios({
     method: "get",
     url:
@@ -82,6 +82,7 @@ router.get("/my-feed/more/:minDate", auth, async (req, res) => {
   let data = {
     following: response.data,
     minDate: req.body.minDate,
+    userId: userId,
   };
   axios({
     method: "post",
