@@ -158,7 +158,7 @@ router.post("/", auth, async (req, res, next) => {
     if (response.status == 200) {
       axios
         .post(
-          process.env.USERS_SERVICE_URL + "/users/update-profile-count",
+          process.env.USERS_SERVICE_URL + "/users/update-post-count",
           form.user
         )
         .then(function (response) {
