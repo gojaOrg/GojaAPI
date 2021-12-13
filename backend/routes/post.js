@@ -150,27 +150,31 @@ router.post("/", auth, async (req, res, next) => {
   var form = req.body;
   form.user.id = req.user._id;
   try {
-    var response = await axios
+    await axios
       .post(process.env.POSTS_SERVICE_URL + "/posts", form)
+      .then(function (response) {
+        if (response.status == 200) {
+          axios
+            .post(
+              process.env.USERS_SERVICE_URL + "/users/update-post-count",
+              form.user
+            )
+            .then(function (response) {
+              res.json(response.data);
+            })
+            .catch(function (error) {
+              console.log(error);
+              res.status(error.response.status).json(error.response.data);
+            });
+          console.log("Post posted to database");
+        } else {
+          res.send("Something went wrong");
+        }
+      })
       .catch(function (error) {
         res.status(error.response.status).json(error.response.data);
       });
-    if (response.status == 200) {
-      axios
-        .post(
-          process.env.USERS_SERVICE_URL + "/users/update-post-count",
-          form.user
-        )
-        .then(function (response) {
-          res.json(response.data);
-        })
-        .catch(function (error) {
-          res.status(error.response.status).json(error.response.data);
-        });
-      console.log("Post posted to database");
-    } else {
-      res.send("Something went wrong");
-    }
+    
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server error" });
