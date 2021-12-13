@@ -13,14 +13,18 @@ const { createSearchObj } = require("../utils/createSearchUserObj");
 
 router.get("/profile/:id", auth, async (req, res) => {
   var userId;
+  var route;
   if (req.params.id == "me") {
     userId = req.user._id;
+    route = "/users/profile/" + userId;
   } else {
+    me = req.user._id;
     userId = req.params.id;
+    route = "/users/profile/" + userId + "/" + me;
   }
   axios({
     method: "get",
-    url: process.env.USERS_SERVICE_URL + "/users/profile/" + userId,
+    url: process.env.USERS_SERVICE_URL + route,
   })
     .then(function (response) {
       res.json(response.data);
