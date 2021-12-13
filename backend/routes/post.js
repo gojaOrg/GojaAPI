@@ -168,6 +168,8 @@ router.post("/", auth, async (req, res, next) => {
                 res.status(error.response.status).json(error.response.data);
               });
             console.log("Post posted to database");
+          } else {
+            res.json(response.data);
           }
            
         } else {
