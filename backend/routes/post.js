@@ -154,19 +154,22 @@ router.post("/", auth, async (req, res, next) => {
       .post(process.env.POSTS_SERVICE_URL + "/posts", form)
       .then(function (response) {
         if (response.status == 200) {
-          axios
-            .post(
-              process.env.USERS_SERVICE_URL + "/users/update-post-count",
-              form.user
-            )
-            .then(function (response) {
-              res.json(response.data);
-            })
-            .catch(function (error) {
-              console.log(error);
-              res.status(error.response.status).json(error.response.data);
-            });
-          console.log("Post posted to database");
+          if (!form.inReplyToPostId) {
+            axios
+              .post(
+                process.env.USERS_SERVICE_URL + "/users/update-post-count",
+                form.user
+              )
+              .then(function (response) {
+                res.json(response.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+                res.status(error.response.status).json(error.response.data);
+              });
+            console.log("Post posted to database");
+          }
+           
         } else {
           res.send("Something went wrong");
         }
