@@ -13,10 +13,7 @@ git clone git@github.com:ralfkatt/GojaAPI.git
 cd GojaAPI/backend
 ```
 
-3. Create a .env file contaning required information.
-```
-echo -e "MY_KEY=ghlw923njsdhj273ndkdhg91allkowebnk2\nUSERS_SERVICE_URL=http://localhost:3001\nPOSTS_SERVICE_URL=http://localhost:3002" > .env
-```
+3. Place the given .env file contaning the required information in the GojaAPI/backend folder.
 
 4. Install packages.
 ```
