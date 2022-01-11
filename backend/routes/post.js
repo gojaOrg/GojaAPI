@@ -28,6 +28,19 @@ router.get("/by-user/:id", auth, async (req, res) => {
     });
 });
 
+router.get("/by-id/:id", auth, async (req, res) => {
+  axios({
+    method: "get",
+    url: process.env.POSTS_SERVICE_URL + "/posts/by-id/" + req.params.id,
+  })
+    .then(function (response) {
+      res.json(response.data);
+    })
+    .catch(function (error) {
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
 router.get("/all", auth, async (req, res) => {
   var userId = req.user._id;
   console.log(userId);
