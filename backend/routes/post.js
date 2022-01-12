@@ -43,9 +43,7 @@ router.get("/by-id/:id", auth, async (req, res) => {
 
 router.get("/all", auth, async (req, res) => {
   var userId = req.user._id;
-  console.log(userId);
   axios({
-    method: "get",
     url: process.env.POSTS_SERVICE_URL + "/posts/all",
   })
     .then(function (response) {
@@ -58,7 +56,6 @@ router.get("/all", auth, async (req, res) => {
 
 router.get("/my-feed", auth, async (req, res) => {
   var userId = req.user._id;
-  console.log(userId);
   var response = await axios({
     method: "get",
     url:
@@ -131,7 +128,6 @@ router.post(
   upload.array("photos", 12),
   function (req, res) {
     var fileLocations = [];
-    console.log(req.files);
     for (i = 0; i < req.files.length; i++) {
       fileLocations.push(req.files[i].location);
     }
@@ -141,7 +137,6 @@ router.post(
 router.post("/upload-audio", auth, upload.any(), async function (req, res) {
   const { headers, files } = req;
   const { buffer, originalname: filename } = files[0];
-  console.log(filename);
 
   let formData = new FormData();
   formData.append("file", buffer, { filename });
@@ -180,11 +175,9 @@ router.post("/", auth, async (req, res, next) => {
                 console.log(error);
                 res.status(error.response.status).json(error.response.data);
               });
-            console.log("Post posted to database");
           } else {
             res.json(response.data);
           }
-           
         } else {
           res.send("Something went wrong");
         }
@@ -192,7 +185,6 @@ router.post("/", auth, async (req, res, next) => {
       .catch(function (error) {
         res.status(error.response.status).json(error.response.data);
       });
-    
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server error" });
@@ -208,7 +200,6 @@ router.post("/like", auth, async (req, res) => {
     id: body.postId,
     user: { userId: id, userName: body.user.userName },
   };
-  console.log(likeBody);
   if (likeOrUnlike) {
     likePath = "/posts/like";
   } else {
