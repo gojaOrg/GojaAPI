@@ -135,6 +135,7 @@ router.post(
   }
 );
 router.post("/upload-audio", auth, upload.any(), async function (req, res) {
+  console.log(req);
   const { headers, files } = req;
   const { buffer, originalname: filename } = files[0];
 
@@ -194,20 +195,41 @@ router.post("/", auth, async (req, res, next) => {
 router.post("/like", auth, async (req, res) => {
   const id = req.user._id;
   const body = req.body;
-  const likeOrUnlike = body.likeType;
-  let likePath;
+
   let likeBody = {
     id: body.postId,
-    user: { userId: id, userName: body.user.userName },
+    user: { id: id, userName: body.user.userName },
   };
-  if (likeOrUnlike) {
-    likePath = "/posts/like";
-  } else {
-    likePath = "/posts/unlike";
-  }
+
   try {
     axios
-      .post(process.env.POSTS_SERVICE_URL + likePath, likeBody)
+      .post(process.env.POSTS_SERVICE_URL + "/posts/like", likeBody)
+      .then((response) => {
+        console.log(response.data);
+        res.json(response.data);
+      })
+      .catch((error) => {
+        console.log(error.response.status);
+        res
+          .status(error.response.status)
+          .json({ message: error.response.data });
+      });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/unlike", auth, async (req, res) => {
+  const id = req.user._id;
+  const body = req.body;
+  let likeBody = {
+    id: body.postId,
+    user: { id: id, userName: body.user.userName },
+  };
+  try {
+    axios
+      .post(process.env.POSTS_SERVICE_URL + "/posts/unlike", likeBody)
       .then((response) => {
         res.json(response.data);
       })
