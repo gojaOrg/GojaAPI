@@ -123,6 +123,38 @@ router.get("/replies/:id", auth, async (req, res) => {
     });
 });
 
+router.get("/hashtag", auth, async (req, res) => {
+  const userId = req.user._id;
+  const searchString = req.query.search;
+  axios
+    .get(process.env.POSTS_SERVICE_URL + "/posts/hashtag", {
+      params: { search: searchString },
+    })
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
+router.get("/search-hashtag", auth, async (req, res) => {
+  const userId = req.user._id;
+  const searchString = req.query.search;
+  axios
+    .get(process.env.POSTS_SERVICE_URL + "/posts/search-hashtag", {
+      params: { search: searchString },
+    })
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(error.response.status).json(error.response.data);
+    });
+});
+
 router.post(
   "/add-jobpictures",
   upload.array("photos", 12),
@@ -135,7 +167,6 @@ router.post(
   }
 );
 router.post("/upload-audio", auth, upload.any(), async function (req, res) {
-  console.log(req);
   const { headers, files } = req;
   const { buffer, originalname: filename } = files[0];
 
@@ -163,22 +194,20 @@ router.post("/", auth, async (req, res, next) => {
       .post(process.env.POSTS_SERVICE_URL + "/posts", form)
       .then(function (response) {
         if (response.status == 200) {
+          console.log("heeere");
           if (!form.inReplyToPostId) {
-            axios
+            const updateResponse = axios
               .post(
                 process.env.USERS_SERVICE_URL + "/users/update-post-count",
                 form.user
               )
-              .then(function (response) {
-                res.json(response.data);
-              })
               .catch(function (error) {
                 console.log(error);
                 res.status(error.response.status).json(error.response.data);
               });
-          } else {
-            res.json(response.data);
           }
+          console.log(response.data);
+          res.json(response.data);
         } else {
           res.send("Something went wrong");
         }
