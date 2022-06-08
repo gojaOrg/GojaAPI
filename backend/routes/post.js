@@ -87,7 +87,7 @@ router.get("/my-feed", auth, async (req, res) => {
       res.send("Error");
     }
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
