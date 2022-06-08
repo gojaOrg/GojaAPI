@@ -61,7 +61,7 @@ router.get("/my-feed", auth, async (req, res) => {
     url:
       process.env.USERS_SERVICE_URL + "/users/following-for-my-feed/" + userId,
   });
-  if (response) {
+  if (response.status == 200) {
     let data = {
       following: response.data,
       userId: userId,
@@ -83,7 +83,6 @@ router.get("/my-feed", auth, async (req, res) => {
   } else {
     res.send("Error");
   }
- 
 });
 
 router.get("/my-feed/more/:minDate", auth, async (req, res) => {
@@ -94,25 +93,29 @@ router.get("/my-feed/more/:minDate", auth, async (req, res) => {
     url:
       process.env.USERS_SERVICE_URL + "/users/following-for-my-feed/" + userId,
   });
-  let data = {
-    following: response.data,
-    minDate: req.body.minDate,
-    userId: userId,
-  };
-  axios({
-    method: "post",
-    url: process.env.POSTS_SERVICE_URL + "/posts/my-feed/more",
-    data: data,
-  })
-    .then(function (response) {
-      // your action after success
-      res.json(response.data);
+  if (response.status == 200) {
+    let data = {
+      following: response.data,
+      minDate: req.body.minDate,
+      userId: userId,
+    };
+    axios({
+      method: "post",
+      url: process.env.POSTS_SERVICE_URL + "/posts/my-feed/more",
+      data: data,
     })
-    .catch(function (error) {
-      // your action on error success
-      res.json(error);
-      console.log(error);
-    });
+      .then(function (response) {
+        // your action after success
+        res.json(response.data);
+      })
+      .catch(function (error) {
+        // your action on error success
+        res.json(error);
+        console.log(error);
+      });
+  } else {
+    res.send("Error");
+  }
 });
 
 router.get("/replies/:id", auth, async (req, res) => {
