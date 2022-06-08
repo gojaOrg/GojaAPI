@@ -26,6 +26,7 @@
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "express-validator": "^6.6.1",
+    "form-data": "^4.0.0",
     "handlebars": "^4.7.7",
     "http-errors": "~1.6.3",
     "jade": "^1.9.2",
