@@ -56,65 +56,79 @@ router.get("/all", auth, async (req, res) => {
 
 router.get("/my-feed", auth, async (req, res) => {
   var userId = req.user._id;
-  var response = await axios({
-    method: "get",
-    url:
-      process.env.USERS_SERVICE_URL + "/users/following-for-my-feed/" + userId,
-  });
-  if (response.status == 200) {
-    let data = {
-      following: response.data,
-      userId: userId,
-    };
-    axios({
-      method: "post",
-      url: process.env.POSTS_SERVICE_URL + "/posts/my-feed",
-      data: data,
-    })
-      .then(function (response) {
-        // your action after success
-        res.json(response.data);
+  try {
+    var response = await axios({
+      method: "get",
+      url:
+        process.env.USERS_SERVICE_URL +
+        "/users/following-for-my-feed/" +
+        userId,
+    });
+    if (response.status == 200) {
+      let data = {
+        following: response.data,
+        userId: userId,
+      };
+      axios({
+        method: "post",
+        url: process.env.POSTS_SERVICE_URL + "/posts/my-feed",
+        data: data,
       })
-      .catch(function (error) {
-        // your action on error success
-        res.json(error);
-        //console.log(error);
-      });
-  } else {
-    res.send("Error");
+        .then(function (response) {
+          // your action after success
+          res.json(response.data);
+        })
+        .catch(function (error) {
+          // your action on error success
+          res.json(error);
+          //console.log(error);
+        });
+    } else {
+      res.send("Error");
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 router.get("/my-feed/more/:minDate", auth, async (req, res) => {
   var userId = req.user._id;
-  req.body.minDate = req.params.minDate;
-  var response = await axios({
-    method: "get",
-    url:
-      process.env.USERS_SERVICE_URL + "/users/following-for-my-feed/" + userId,
-  });
-  if (response.status == 200) {
-    let data = {
-      following: response.data,
-      minDate: req.body.minDate,
-      userId: userId,
-    };
-    axios({
-      method: "post",
-      url: process.env.POSTS_SERVICE_URL + "/posts/my-feed/more",
-      data: data,
-    })
-      .then(function (response) {
-        // your action after success
-        res.json(response.data);
+  try {
+    req.body.minDate = req.params.minDate;
+    var response = await axios({
+      method: "get",
+      url:
+        process.env.USERS_SERVICE_URL +
+        "/users/following-for-my-feed/" +
+        userId,
+    });
+    if (response.status == 200) {
+      let data = {
+        following: response.data,
+        minDate: req.body.minDate,
+        userId: userId,
+      };
+      axios({
+        method: "post",
+        url: process.env.POSTS_SERVICE_URL + "/posts/my-feed/more",
+        data: data,
       })
-      .catch(function (error) {
-        // your action on error success
-        res.json(error);
-        console.log(error);
-      });
-  } else {
-    res.send("Error");
+        .then(function (response) {
+          // your action after success
+          res.json(response.data);
+        })
+        .catch(function (error) {
+          // your action on error success
+          res.json(error);
+          console.log(error);
+        });
+    } else {
+      res.send("Error");
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
