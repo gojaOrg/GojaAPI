@@ -216,7 +216,6 @@ router.post("/", auth, async (req, res, next) => {
       .post(process.env.POSTS_SERVICE_URL + "/posts", form)
       .then(function (response) {
         if (response.status == 200) {
-          console.log("heeere");
           if (!form.inReplyToPostId) {
             const updateResponse = axios
               .post(
@@ -228,7 +227,6 @@ router.post("/", auth, async (req, res, next) => {
                 res.status(error.response.status).json(error.response.data);
               });
           }
-          console.log(response.data);
           res.json(response.data);
         } else {
           res.send("Something went wrong");
@@ -256,7 +254,6 @@ router.post("/like", auth, async (req, res) => {
     axios
       .post(process.env.POSTS_SERVICE_URL + "/posts/like", likeBody)
       .then((response) => {
-        console.log(response.data);
         res.json(response.data);
       })
       .catch((error) => {

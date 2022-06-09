@@ -27,7 +27,6 @@ router.get("/profile/:id", auth, async (req, res) => {
     url: process.env.USERS_SERVICE_URL + route,
   })
     .then(function (response) {
-      console.log(response.data);
       res.json(response.data);
     })
     .catch(function (error) {
@@ -74,7 +73,6 @@ router.get("/following/:id", auth, async (req, res) => {
 });
 
 router.post("/upload-image", auth, upload.any(), async function (req, res) {
-  console.log(req);
   const { headers, files } = req;
   const { buffer, originalname: filename } = files[0];
 
@@ -265,7 +263,6 @@ router.get("/search", auth, async (req, res) => {
     })
     .then((response) => {
       const ob = createSearchObj(isFollowingList.data, response.data);
-      console.log(ob);
       res.json(ob);
     })
     .catch((error) => {
