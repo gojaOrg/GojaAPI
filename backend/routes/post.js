@@ -64,6 +64,7 @@ router.get("/my-feed", auth, async (req, res) => {
         "/users/following-for-my-feed/" +
         userId,
     });
+    console.log("KOLLA HHÄÄÄÄÄÄÄÄÄR: " + response);
     if (response.status == 200) {
       let data = {
         following: response.data,
